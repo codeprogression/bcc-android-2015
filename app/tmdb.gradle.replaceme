@@ -1,0 +1,8 @@
+/*
+    The application expects an api key from themoviedb.com defined in a "tmdb.gradle" file.
+    Apply for your own api key at themoviedb.com.
+    For more info on the api: http://docs.themoviedb.apiary.io/
+*/
+project.ext{
+    apiKey="YOUR_API_KEY"
+}
