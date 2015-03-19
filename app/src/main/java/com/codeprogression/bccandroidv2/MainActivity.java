@@ -2,11 +2,13 @@ package com.codeprogression.bccandroidv2;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.codeprogression.bccandroidv2.api.models.Configuration;
 import com.codeprogression.bccandroidv2.api.models.Movie;
 import com.codeprogression.bccandroidv2.api.models.TmdbCollection;
 import com.google.gson.FieldNamingPolicy;
@@ -24,6 +26,7 @@ public class MainActivity extends ActionBarActivity {
 
     private RecyclerView nowPlaying;
     private NowPlayingAdapter adapter;
+    private static Configuration configuration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,16 +39,44 @@ public class MainActivity extends ActionBarActivity {
     protected void onResume() {
         super.onResume();
         updateView();
-        updateNowPlaying();
+        updateConfiguration();
     }
 
     private void updateView() {
-        nowPlaying.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new NowPlayingAdapter(this);
-        nowPlaying.setAdapter(adapter);
+        nowPlaying.setLayoutManager(new GridLayoutManager(this, 2));
     }
 
+    private void updateConfiguration(){
+        if (configuration == null) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+
+                    try {
+                        URL url = new URL("http://api.themoviedb.org/3/configuration?api_key="
+                                + BuildConfig.TMDB_API_KEY);
+                        URLConnection connection = url.openConnection();
+                        BufferedInputStream inputStream = new BufferedInputStream(connection.getInputStream());
+                        Gson gson = new GsonBuilder()
+                                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+                                .create();
+                        final Configuration config =
+                                gson.fromJson(new InputStreamReader(inputStream), Configuration.class);
+
+                        configuration = config;
+                        updateNowPlaying();
+
+                    } catch (java.io.IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
+        } else {
+            updateNowPlaying();
+        }
+    }
     private void updateNowPlaying() {
+
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -64,6 +95,10 @@ public class MainActivity extends ActionBarActivity {
                         @Override
                         public void run() {
 
+                            if (adapter == null){
+                                adapter = new NowPlayingAdapter(MainActivity.this, configuration);
+                                nowPlaying.setAdapter(adapter);
+                            }
                             adapter.update(collection.getResults());
                         }
                     });
