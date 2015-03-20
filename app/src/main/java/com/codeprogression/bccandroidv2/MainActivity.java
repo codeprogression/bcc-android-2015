@@ -3,10 +3,11 @@ package com.codeprogression.bccandroidv2;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import com.codeprogression.bccandroidv2.api.models.Configuration;
 import com.codeprogression.bccandroidv2.api.models.Movie;
@@ -14,11 +15,9 @@ import com.codeprogression.bccandroidv2.api.models.TmdbCollection;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 
 import java.io.BufferedInputStream;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -26,28 +25,29 @@ public class MainActivity extends ActionBarActivity {
 
     private RecyclerView nowPlaying;
     private NowPlayingAdapter adapter;
-    private static Configuration configuration;
+    private ProgressBar progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         nowPlaying = (RecyclerView) findViewById(R.id.now_playing);
+        progress = (ProgressBar) findViewById(R.id.progress);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         updateView();
-        updateConfiguration();
+        checkConfiguration();
     }
 
     private void updateView() {
         nowPlaying.setLayoutManager(new GridLayoutManager(this, 2));
     }
 
-    private void updateConfiguration(){
-        if (configuration == null) {
+    private void checkConfiguration(){
+        if (UnconventionalApplication.configuration == null) {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -60,10 +60,9 @@ public class MainActivity extends ActionBarActivity {
                         Gson gson = new GsonBuilder()
                                 .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                                 .create();
-                        final Configuration config =
+                        UnconventionalApplication.configuration=
                                 gson.fromJson(new InputStreamReader(inputStream), Configuration.class);
 
-                        configuration = config;
                         updateNowPlaying();
 
                     } catch (java.io.IOException e) {
@@ -94,9 +93,9 @@ public class MainActivity extends ActionBarActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-
+                            progress.setVisibility(View.GONE);
                             if (adapter == null){
-                                adapter = new NowPlayingAdapter(MainActivity.this, configuration);
+                                adapter = new NowPlayingAdapter(MainActivity.this, UnconventionalApplication.configuration);
                                 nowPlaying.setAdapter(adapter);
                             }
                             adapter.update(collection.getResults());
