@@ -1,7 +1,10 @@
 package com.codeprogression.bccandroidv2;
 
+import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,7 +28,7 @@ public class NowPlayingAdapter extends RecyclerView.Adapter {
     public NowPlayingAdapter(Context context, Configuration configuration) {
         this.configuration = configuration;
         inflater = LayoutInflater.from(context);
-        picasso = Picasso.with(context);
+        picasso = UnconventionalApplication.picasso;
     }
 
     public void update(List<Movie> movies) {
@@ -65,6 +68,11 @@ public class NowPlayingAdapter extends RecyclerView.Adapter {
             this.movie = movie;
             title.setText(movie.getTitle());
 
+            loadBackdrop(movie);
+            loadPoster(movie);
+        }
+
+        private void loadBackdrop(Movie movie) {
             String baseUrl = configuration.getImages().getBaseUrl();
             String posterSize = configuration.getImages().getBackdropSizes().get(1);
             String posterPath = movie.getBackdropPath();
@@ -72,6 +80,13 @@ public class NowPlayingAdapter extends RecyclerView.Adapter {
             picasso.load(uri).placeholder(R.drawable.ic_logo_tmdb_v8).into(poster);
         }
 
+        private void loadPoster(Movie movie){
+            String baseUrl = UnconventionalApplication.configuration.getImages().getBaseUrl();
+            String posterSize = UnconventionalApplication.configuration.getImages().getPosterSizes().get(6);
+            String posterPath = movie.getPosterPath();
+            String uri = String.format("%s%s%s", baseUrl, posterSize, posterPath);
+            picasso.load(uri).fetch();
+        }
         @Override
         public void onClick(View v) {
             Intent intent = new Intent(v.getContext(), MovieActivity.class);
