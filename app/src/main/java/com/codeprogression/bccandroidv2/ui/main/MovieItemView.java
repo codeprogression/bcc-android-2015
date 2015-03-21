@@ -14,12 +14,16 @@ import com.squareup.picasso.Picasso;
 
 import javax.inject.Inject;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+
 public class MovieItemView extends RelativeLayout {
     @Inject Picasso picasso;
     @Inject Configuration configuration;
 
-    private TextView title;
-    private ImageView poster;
+    @InjectView(R.id.title) TextView title;
+    @InjectView(R.id.poster) ImageView poster;
+
     private Movie movie;
 
     public MovieItemView(Context context, AttributeSet attrs) {
@@ -30,8 +34,7 @@ public class MovieItemView extends RelativeLayout {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        title = (TextView) findViewById(R.id.title);
-        poster = (ImageView) findViewById(R.id.poster);
+        ButterKnife.inject(this);
         if (movie == null) return;
         bind(movie);
     }
@@ -39,6 +42,7 @@ public class MovieItemView extends RelativeLayout {
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
+        ButterKnife.reset(this);
         picasso.cancelRequest(poster);
     }
 

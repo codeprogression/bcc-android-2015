@@ -22,6 +22,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    packagingOptions {
+        exclude 'META-INF/services/javax.annotation.processing.Processor'
+    }
 }
 
 dependencies {
@@ -33,10 +36,29 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.5.0'
     compile 'com.squareup.okhttp:okhttp:2.3.0'
 
-    provided 'org.glassfish:javax.annotation:10.0-b28' // adds the @Generated annotation that Android lacks
+    // adds the @Generated annotation that Android lacks
+    provided 'org.glassfish:javax.annotation:10.0-b28'
 
-    compile 'com.google.dagger:dagger:2.0-SNAPSHOT' // https://google.github.io/dagger
-    apt ('com.google.dagger:dagger-compiler:2.0-SNAPSHOT')
+    // https://google.github.io/dagger
+    compile 'com.google.dagger:dagger:2.0-SNAPSHOT'
+    apt('com.google.dagger:dagger-compiler:2.0-SNAPSHOT')
 
-    compile 'io.reactivex:rxandroid:0.23.0' // https://github.com/ReactiveX/RxAndroid
+    // https://github.com/ReactiveX/RxAndroid
+    compile 'io.reactivex:rxandroid:0.23.0'
+
+    // http://jakewharton.github.io/butterknife/
+    compile 'com.jakewharton:butterknife:6.0.0'
+
+    // https://github.com/JakeWharton/timber
+    compile 'com.jakewharton.timber:timber:2.5.0'
+
+    // https://github.com/f2prateek/dart
+    compile 'com.f2prateek.dart:dart:1.1.0'
+
+    provided 'org.projectlombok:lombok:1.14.8'
+    apt 'org.projectlombok:lombok:1.14.8'
+    compile 'org.parceler:parceler-api:0.2.15'
+    provided 'org.parceler:parceler:0.2.15'
+    apt 'org.parceler:parceler:0.2.15'
+    compile 'com.squareup.retrofit:retrofit:1.9.0'
 }

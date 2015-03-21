@@ -15,15 +15,18 @@ import com.squareup.picasso.Picasso;
 
 import javax.inject.Inject;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+
 public class MovieDetailView extends RelativeLayout {
 
     @Inject Picasso picasso;
     @Inject Configuration configuration;
 
-    private ProgressBar progress;
-    private ImageView poster;
-    private TextView title;
-    private TextView overview;
+    @InjectView(R.id.progress) ProgressBar progress;
+    @InjectView(R.id.poster) ImageView poster;
+    @InjectView(R.id.title) TextView title;
+    @InjectView(R.id.overview) TextView overview;
 
     public MovieDetailView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -33,16 +36,13 @@ public class MovieDetailView extends RelativeLayout {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-
-        progress = (ProgressBar) findViewById(R.id.progress);
-        poster = (ImageView) findViewById(R.id.poster);
-        title = (TextView) findViewById(R.id.title);
-        overview = (TextView) findViewById(R.id.overview);
+        ButterKnife.inject(this);
     }
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
+        ButterKnife.reset(this);
         picasso.cancelRequest(poster);
     }
 

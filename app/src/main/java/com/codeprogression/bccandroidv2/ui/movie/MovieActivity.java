@@ -7,20 +7,24 @@ import com.codeprogression.bccandroidv2.R;
 import com.codeprogression.bccandroidv2.UnconventionalApplication;
 import com.codeprogression.bccandroidv2.api.TmdbApiClient;
 import com.codeprogression.bccandroidv2.api.models.Movie;
+import com.f2prateek.dart.Dart;
+import com.f2prateek.dart.InjectExtra;
 
 import javax.inject.Inject;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import timber.log.Timber;
 
 public class MovieActivity extends ActionBarActivity {
-    @Inject
-    TmdbApiClient apiClient;
+    @Inject TmdbApiClient apiClient;
+    @InjectView(R.id.detail_view) MovieDetailView view;
+    @InjectExtra("id") long id;
 
-    private long id;
     private Movie movie;
-    private MovieDetailView view;
 
     private MovieActivityComponent component;
 
@@ -43,10 +47,8 @@ public class MovieActivity extends ActionBarActivity {
 
         setContentView(R.layout.movie_detail);
 
-        Bundle extras = getIntent().getExtras();
-        id = extras.getLong("id");
-
-        view = (MovieDetailView) findViewById(R.id.detail_view);
+        ButterKnife.inject(this);
+        Dart.inject(this);
     }
 
     @Override
@@ -70,7 +72,7 @@ public class MovieActivity extends ActionBarActivity {
 
                         @Override
                         public void onError(Throwable e) {
-
+                            Timber.e(e.getMessage(), e);
                         }
 
                         @Override
