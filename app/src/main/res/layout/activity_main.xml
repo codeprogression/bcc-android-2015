@@ -1,9 +1,9 @@
-<com.codeprogression.bccandroidv2.ui.views.NowPlayingView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.codeprogression.bccandroidv2.ui.main.NowPlayingView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/now_playing_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.codeprogression.bccandroidv2.ui.MainActivity">
+    tools:context="com.codeprogression.bccandroidv2.ui.main.MainActivity">
 
     <ProgressBar
         android:id="@+id/progress"
@@ -15,4 +15,4 @@
         android:id="@+id/now_playing"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-</com.codeprogression.bccandroidv2.ui.views.NowPlayingView>
+</com.codeprogression.bccandroidv2.ui.main.NowPlayingView>

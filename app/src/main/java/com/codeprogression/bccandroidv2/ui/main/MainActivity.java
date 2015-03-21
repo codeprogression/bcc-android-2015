@@ -1,32 +1,43 @@
-package com.codeprogression.bccandroidv2.ui;
+package com.codeprogression.bccandroidv2.ui.main;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ProgressBar;
 
 import com.codeprogression.bccandroidv2.R;
 import com.codeprogression.bccandroidv2.UnconventionalApplication;
 import com.codeprogression.bccandroidv2.api.TmdbApiClient;
 import com.codeprogression.bccandroidv2.api.models.Movie;
 import com.codeprogression.bccandroidv2.api.models.TmdbCollection;
-import com.codeprogression.bccandroidv2.ui.views.NowPlayingView;
+
+import javax.inject.Inject;
 
 public class MainActivity extends ActionBarActivity {
 
-    private TmdbApiClient apiClient;
+    @Inject TmdbApiClient apiClient;
+
     private NowPlayingView view;
+    private MainActivityComponent component;
+
+    public MainActivityComponent getComponent() {
+        return component;
+    }
+
+    private void inject() {
+        component = Dagger_MainActivityComponent.builder()
+                .applicationComponent(UnconventionalApplication.getComponent())
+                .build();
+        component.inject(this);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        inject();
+
         setContentView(R.layout.activity_main);
         view = (NowPlayingView) findViewById(R.id.now_playing_layout);
-        apiClient = new TmdbApiClient();
     }
 
     @Override

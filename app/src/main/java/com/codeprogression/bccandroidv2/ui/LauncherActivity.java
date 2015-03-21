@@ -1,6 +1,7 @@
 package com.codeprogression.bccandroidv2.ui;
 
 import com.codeprogression.bccandroidv2.R;
+import com.codeprogression.bccandroidv2.ui.main.MainActivity;
 
 import android.content.Intent;
 import android.os.Bundle;

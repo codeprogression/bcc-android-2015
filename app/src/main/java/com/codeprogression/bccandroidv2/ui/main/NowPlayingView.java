@@ -1,4 +1,4 @@
-package com.codeprogression.bccandroidv2.ui.views;
+package com.codeprogression.bccandroidv2.ui.main;
 
 import android.content.Context;
 import android.support.v7.widget.GridLayoutManager;
@@ -11,7 +11,7 @@ import android.widget.RelativeLayout;
 import com.codeprogression.bccandroidv2.R;
 import com.codeprogression.bccandroidv2.api.models.Movie;
 import com.codeprogression.bccandroidv2.api.models.TmdbCollection;
-import com.codeprogression.bccandroidv2.ui.NowPlayingAdapter;
+import com.codeprogression.bccandroidv2.ui.main.NowPlayingAdapter;
 
 public class NowPlayingView extends RelativeLayout {
 

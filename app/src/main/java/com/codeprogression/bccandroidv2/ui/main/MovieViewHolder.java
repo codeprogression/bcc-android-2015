@@ -1,11 +1,12 @@
-package com.codeprogression.bccandroidv2.ui;
+package com.codeprogression.bccandroidv2.ui.main;
 
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.codeprogression.bccandroidv2.api.models.Movie;
-import com.codeprogression.bccandroidv2.ui.views.MovieItemView;
+import com.codeprogression.bccandroidv2.ui.main.MovieItemView;
+import com.codeprogression.bccandroidv2.ui.movie.MovieActivity;
 
 public class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
     private Movie movie;

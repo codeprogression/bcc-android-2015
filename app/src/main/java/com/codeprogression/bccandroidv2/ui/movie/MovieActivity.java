@@ -1,40 +1,42 @@
-package com.codeprogression.bccandroidv2.ui;
+package com.codeprogression.bccandroidv2.ui.movie;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.codeprogression.bccandroidv2.R;
 import com.codeprogression.bccandroidv2.UnconventionalApplication;
 import com.codeprogression.bccandroidv2.api.TmdbApiClient;
-import com.codeprogression.bccandroidv2.api.models.Configuration;
 import com.codeprogression.bccandroidv2.api.models.Movie;
-import com.codeprogression.bccandroidv2.ui.views.MovieDetailView;
-import com.google.gson.FieldNamingPolicy;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.squareup.picasso.Picasso;
 
-import java.io.BufferedInputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
+import javax.inject.Inject;
 
 public class MovieActivity extends ActionBarActivity {
+    @Inject TmdbApiClient apiClient;
+
     private long id;
     private Movie movie;
-    private TmdbApiClient apiClient;
     private MovieDetailView view;
+
+    private MovieActivityComponent component;
+
+    public MovieActivityComponent getComponent() {
+        return component;
+    }
+
+    private void inject() {
+        component = Dagger_MovieActivityComponent.builder()
+                .applicationComponent(UnconventionalApplication.getComponent())
+                .build();
+        component.inject(this);
+    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.movie_detail);
+        inject();
 
-        apiClient = new TmdbApiClient();
+        setContentView(R.layout.movie_detail);
 
         Bundle extras = getIntent().getExtras();
         id = extras.getLong("id");
