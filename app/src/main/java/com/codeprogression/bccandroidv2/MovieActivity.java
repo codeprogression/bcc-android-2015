@@ -7,6 +7,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.codeprogression.bccandroidv2.api.TmdbApiClient;
+import com.codeprogression.bccandroidv2.api.models.Configuration;
 import com.codeprogression.bccandroidv2.api.models.Movie;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
@@ -26,6 +28,7 @@ public class MovieActivity extends ActionBarActivity {
     private ImageView poster;
     private TextView title;
     private TextView overview;
+    private TmdbApiClient apiClient;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -39,6 +42,7 @@ public class MovieActivity extends ActionBarActivity {
         poster = (ImageView) findViewById(R.id.poster);
         title = (TextView) findViewById(R.id.title);
         overview = (TextView) findViewById(R.id.overview);
+        apiClient = new TmdbApiClient();
     }
 
     @Override
@@ -48,37 +52,22 @@ public class MovieActivity extends ActionBarActivity {
     }
 
     private void getMovieDetails() {
-
-        if (movie != null){
+        if (movie != null) {
             updateView();
         } else {
-            new Thread(new Runnable() {
+            apiClient.getMovie(id, new TmdbApiClient.Callback<Movie>() {
                 @Override
-                public void run() {
-
-                    try {
-                        URL url = new URL("http://api.themoviedb.org/3/movie/" + Long.toString(id) + "?api_key="
-                                + BuildConfig.TMDB_API_KEY);
-                        URLConnection connection = url.openConnection();
-                        BufferedInputStream inputStream = new BufferedInputStream(connection.getInputStream());
-                        Gson gson = new GsonBuilder()
-                                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-                                .create();
-                        movie =
-                                gson.fromJson(new InputStreamReader(inputStream), Movie.class);
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                progress.setVisibility(View.GONE);
-                                updateView();
-                            }
-                        });
-
-                    } catch (java.io.IOException e) {
-                        e.printStackTrace();
-                    }
+                public void onComplete(Movie result) {
+                    movie = result;
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            progress.setVisibility(View.GONE);
+                            updateView();
+                        }
+                    });
                 }
-            }).start();
+            });
         }
     }
 
@@ -86,10 +75,7 @@ public class MovieActivity extends ActionBarActivity {
 
         title.setText(movie.getTitle());
         overview.setText(movie.getOverview());
-        String baseUrl = UnconventionalApplication.configuration.getImages().getBaseUrl();
-        String posterSize = UnconventionalApplication.configuration.getImages().getPosterSizes().get(6);
-        String posterPath = movie.getPosterPath();
-        String uri = String.format("%s%s%s", baseUrl, posterSize, posterPath);
-        picasso.load(uri).into(poster);
+        String posterUri = movie.getPosterUri(UnconventionalApplication.configuration);
+        picasso.load(posterUri).into(poster);
     }
 }
