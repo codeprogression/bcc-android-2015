@@ -1,4 +1,4 @@
-package com.codeprogression.bccandroidv2;
+package com.codeprogression.bccandroidv2.ui;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -9,35 +9,30 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import com.codeprogression.bccandroidv2.R;
+import com.codeprogression.bccandroidv2.UnconventionalApplication;
 import com.codeprogression.bccandroidv2.api.TmdbApiClient;
 import com.codeprogression.bccandroidv2.api.models.Movie;
 import com.codeprogression.bccandroidv2.api.models.TmdbCollection;
+import com.codeprogression.bccandroidv2.ui.views.NowPlayingView;
 
 public class MainActivity extends ActionBarActivity {
 
-    private RecyclerView nowPlaying;
-    private NowPlayingAdapter adapter;
-    private ProgressBar progress;
     private TmdbApiClient apiClient;
+    private NowPlayingView view;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        nowPlaying = (RecyclerView) findViewById(R.id.now_playing);
-        progress = (ProgressBar) findViewById(R.id.progress);
+        view = (NowPlayingView) findViewById(R.id.now_playing_layout);
         apiClient = new TmdbApiClient();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        updateView();
         checkConfiguration();
-    }
-
-    private void updateView() {
-        nowPlaying.setLayoutManager(new GridLayoutManager(this, 2));
     }
 
     private void checkConfiguration() {
@@ -56,12 +51,7 @@ public class MainActivity extends ActionBarActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        progress.setVisibility(View.GONE);
-                        if (adapter == null) {
-                            adapter = new NowPlayingAdapter(MainActivity.this, UnconventionalApplication.configuration);
-                            nowPlaying.setAdapter(adapter);
-                        }
-                        adapter.update(result.getResults());
+                        view.bind(result);
                     }
                 });
             }
