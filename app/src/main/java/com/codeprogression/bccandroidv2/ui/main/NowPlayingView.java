@@ -10,8 +10,6 @@ import android.widget.RelativeLayout;
 
 import com.codeprogression.bccandroidv2.R;
 import com.codeprogression.bccandroidv2.api.models.Movie;
-import com.codeprogression.bccandroidv2.api.models.TmdbCollection;
-import com.codeprogression.bccandroidv2.ui.main.NowPlayingAdapter;
 
 public class NowPlayingView extends RelativeLayout {
 
@@ -38,7 +36,7 @@ public class NowPlayingView extends RelativeLayout {
         super.onDetachedFromWindow();
     }
 
-    public void bind(TmdbCollection<Movie> collection){
+    public void bind(Movie.Collection collection){
         progress.setVisibility(View.GONE);
         if (adapter == null) {
             adapter = new NowPlayingAdapter(getContext());

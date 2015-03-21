@@ -1,7 +1,7 @@
 package com.codeprogression.bccandroidv2.ui.main;
 
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -9,9 +9,13 @@ import com.codeprogression.bccandroidv2.R;
 import com.codeprogression.bccandroidv2.UnconventionalApplication;
 import com.codeprogression.bccandroidv2.api.TmdbApiClient;
 import com.codeprogression.bccandroidv2.api.models.Movie;
-import com.codeprogression.bccandroidv2.api.models.TmdbCollection;
 
 import javax.inject.Inject;
+
+import rx.Subscriber;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -19,6 +23,7 @@ public class MainActivity extends ActionBarActivity {
 
     private NowPlayingView view;
     private MainActivityComponent component;
+    private Subscription subscription;
 
     public MainActivityComponent getComponent() {
         return component;
@@ -43,30 +48,37 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        checkConfiguration();
+        updateNowPlaying();
     }
 
-    private void checkConfiguration() {
-        apiClient.getConfiguration(new TmdbApiClient.Callback<Void>() {
-            @Override
-            public void onComplete(Void result) {
-                updateNowPlaying();
-            }
-        });
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (subscription != null && !subscription.isUnsubscribed()){
+            subscription.unsubscribe();
+        }
     }
 
     private void updateNowPlaying() {
-        apiClient.getNowPlaying(new TmdbApiClient.Callback<TmdbCollection<Movie>>() {
-            @Override
-            public void onComplete(final TmdbCollection<Movie> result) {
-                runOnUiThread(new Runnable() {
+        subscription = apiClient.getNowPlaying()
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<Movie.Collection>() {
                     @Override
-                    public void run() {
-                        view.bind(result);
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(Movie.Collection collection) {
+                        view.bind(collection);
                     }
                 });
-            }
-        });
     }
 
     @Override
