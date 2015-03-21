@@ -7,7 +7,7 @@ import android.view.MenuItem;
 
 import com.codeprogression.bccandroidv2.R;
 import com.codeprogression.bccandroidv2.UnconventionalApplication;
-import com.codeprogression.bccandroidv2.api.TmdbApiClient;
+import com.codeprogression.bccandroidv2.api.TmdbApiService;
 import com.codeprogression.bccandroidv2.api.models.Movie;
 
 import javax.inject.Inject;
@@ -22,7 +22,7 @@ import timber.log.Timber;
 
 public class MainActivity extends ActionBarActivity {
 
-    @Inject TmdbApiClient apiClient;
+    @Inject TmdbApiService apiClient;
 
     @InjectView(R.id.now_playing_layout) NowPlayingView view;
     private MainActivityComponent component;

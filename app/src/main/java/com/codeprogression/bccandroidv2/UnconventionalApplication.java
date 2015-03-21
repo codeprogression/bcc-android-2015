@@ -2,15 +2,11 @@ package com.codeprogression.bccandroidv2;
 
 import android.app.Application;
 
-import com.codeprogression.bccandroidv2.api.TmdbApiClient;
+import com.codeprogression.bccandroidv2.api.TmdbApiService;
 import com.codeprogression.bccandroidv2.api.models.Configuration;
 import com.codeprogression.bccandroidv2.ui.LauncherActivity;
-import com.squareup.picasso.Cache;
-import com.squareup.picasso.LruCache;
-import com.squareup.picasso.OkHttpDownloader;
 import com.squareup.picasso.Picasso;
 
-import javax.inject.Provider;
 import javax.inject.Singleton;
 
 import dagger.Component;
@@ -32,7 +28,7 @@ public class UnconventionalApplication extends Application {
     public interface ApplicationComponent{
 
         Picasso picasso();
-        TmdbApiClient apiClient();
+        TmdbApiService service();
         Configuration configuration();
 
         void inject(LauncherActivity launcherActivity);

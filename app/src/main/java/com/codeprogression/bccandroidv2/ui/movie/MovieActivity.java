@@ -5,7 +5,7 @@ import android.support.v7.app.ActionBarActivity;
 
 import com.codeprogression.bccandroidv2.R;
 import com.codeprogression.bccandroidv2.UnconventionalApplication;
-import com.codeprogression.bccandroidv2.api.TmdbApiClient;
+import com.codeprogression.bccandroidv2.api.TmdbApiService;
 import com.codeprogression.bccandroidv2.api.models.Movie;
 import com.f2prateek.dart.Dart;
 import com.f2prateek.dart.InjectExtra;
@@ -20,7 +20,7 @@ import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
 public class MovieActivity extends ActionBarActivity {
-    @Inject TmdbApiClient apiClient;
+    @Inject TmdbApiService apiClient;
     @InjectView(R.id.detail_view) MovieDetailView view;
     @InjectExtra("id") long id;
 

@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.codeprogression.bccandroidv2" >
+    package="com.codeprogression.bccandroidv2">
 
     <uses-permission android:name="android.permission.INTERNET" />
->
+    >
     <application
         android:name=".UnconventionalApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <activity
             android:name=".ui.LauncherActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/title_activity_fullscreen"
+            android:label="@string/app_name"
             android:noHistory="true"
-            android:theme="@style/Theme.AppCompat.NoActionBar" >
+            android:theme="@style/Theme.AppCompat.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -25,9 +25,9 @@
 
         <activity
             android:name=".ui.main.MainActivity"
-            android:label="@string/app_name" >
-        </activity>
-        <activity android:name=".ui.movie.MovieActivity"
+            android:label="@string/app_name"></activity>
+        <activity
+            android:name=".ui.movie.MovieActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
     </application>
 
