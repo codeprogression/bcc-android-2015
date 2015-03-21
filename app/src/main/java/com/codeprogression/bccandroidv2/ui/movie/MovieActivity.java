@@ -10,8 +10,13 @@ import com.codeprogression.bccandroidv2.api.models.Movie;
 
 import javax.inject.Inject;
 
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+
 public class MovieActivity extends ActionBarActivity {
-    @Inject TmdbApiClient apiClient;
+    @Inject
+    TmdbApiClient apiClient;
 
     private long id;
     private Movie movie;
@@ -54,18 +59,26 @@ public class MovieActivity extends ActionBarActivity {
         if (movie != null) {
             view.bind(movie);
         } else {
-            apiClient.getMovie(id, new TmdbApiClient.Callback<Movie>() {
-                @Override
-                public void onComplete(final Movie result) {
-                    movie = result;
-                    runOnUiThread(new Runnable() {
+            apiClient.getMovie(id)
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Subscriber<Movie>() {
                         @Override
-                        public void run() {
+                        public void onCompleted() {
+
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+
+                        }
+
+                        @Override
+                        public void onNext(Movie result) {
+                            movie = result;
                             view.bind(result);
                         }
                     });
-                }
-            });
         }
     }
 }

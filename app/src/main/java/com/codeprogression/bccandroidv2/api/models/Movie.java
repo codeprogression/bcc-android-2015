@@ -1,6 +1,5 @@
 package com.codeprogression.bccandroidv2.api.models;
 
-import com.codeprogression.bccandroidv2.UnconventionalApplication;
 import com.google.gson.annotations.Expose;
 
 public class Movie {
