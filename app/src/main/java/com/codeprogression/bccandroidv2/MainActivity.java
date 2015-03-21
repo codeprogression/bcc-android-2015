@@ -9,23 +9,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 
-import com.codeprogression.bccandroidv2.api.models.Configuration;
+import com.codeprogression.bccandroidv2.api.TmdbApiClient;
 import com.codeprogression.bccandroidv2.api.models.Movie;
 import com.codeprogression.bccandroidv2.api.models.TmdbCollection;
-import com.google.gson.FieldNamingPolicy;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
-import java.io.BufferedInputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
 
 public class MainActivity extends ActionBarActivity {
 
     private RecyclerView nowPlaying;
     private NowPlayingAdapter adapter;
     private ProgressBar progress;
+    private TmdbApiClient apiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +26,7 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
         nowPlaying = (RecyclerView) findViewById(R.id.now_playing);
         progress = (ProgressBar) findViewById(R.id.progress);
+        apiClient = new TmdbApiClient();
     }
 
     @Override
@@ -46,67 +40,32 @@ public class MainActivity extends ActionBarActivity {
         nowPlaying.setLayoutManager(new GridLayoutManager(this, 2));
     }
 
-    private void checkConfiguration(){
-        if (UnconventionalApplication.configuration == null) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-
-                    try {
-                        URL url = new URL("http://api.themoviedb.org/3/configuration?api_key="
-                                + BuildConfig.TMDB_API_KEY);
-                        URLConnection connection = url.openConnection();
-                        BufferedInputStream inputStream = new BufferedInputStream(connection.getInputStream());
-                        Gson gson = new GsonBuilder()
-                                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-                                .create();
-                        UnconventionalApplication.configuration=
-                                gson.fromJson(new InputStreamReader(inputStream), Configuration.class);
-
-                        updateNowPlaying();
-
-                    } catch (java.io.IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }).start();
-        } else {
-            updateNowPlaying();
-        }
-    }
-    private void updateNowPlaying() {
-
-        new Thread(new Runnable() {
+    private void checkConfiguration() {
+        apiClient.getConfiguration(new TmdbApiClient.Callback<Void>() {
             @Override
-            public void run() {
-
-                try {
-                    URL url = new URL("http://api.themoviedb.org/3/movie/now_playing?api_key="
-                            + BuildConfig.TMDB_API_KEY);
-                    URLConnection connection = url.openConnection();
-                    BufferedInputStream inputStream = new BufferedInputStream(connection.getInputStream());
-                    Gson gson = new GsonBuilder()
-                            .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-                            .create();
-                    final TmdbCollection<Movie> collection =
-                            gson.fromJson(new InputStreamReader(inputStream), Movie.Collection.class);
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            progress.setVisibility(View.GONE);
-                            if (adapter == null){
-                                adapter = new NowPlayingAdapter(MainActivity.this, UnconventionalApplication.configuration);
-                                nowPlaying.setAdapter(adapter);
-                            }
-                            adapter.update(collection.getResults());
-                        }
-                    });
-
-                } catch (java.io.IOException e) {
-                    e.printStackTrace();
-                }
+            public void onComplete(Void result) {
+                updateNowPlaying();
             }
-        }).start();
+        });
+    }
+
+    private void updateNowPlaying() {
+        apiClient.getNowPlaying(new TmdbApiClient.Callback<TmdbCollection<Movie>>() {
+            @Override
+            public void onComplete(final TmdbCollection<Movie> result) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        progress.setVisibility(View.GONE);
+                        if (adapter == null) {
+                            adapter = new NowPlayingAdapter(MainActivity.this, UnconventionalApplication.configuration);
+                            nowPlaying.setAdapter(adapter);
+                        }
+                        adapter.update(result.getResults());
+                    }
+                });
+            }
+        });
     }
 
     @Override
