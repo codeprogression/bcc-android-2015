@@ -23,8 +23,12 @@ public class UnconventionalApplication extends Application {
     }
 
     @Singleton
-    @Component(modules = ApplicationModule.class)
+    @Component(modules = {
+            ApplicationModule.class,
+            DataModule.class
+    })
     public interface ApplicationComponent{
+
         Picasso picasso();
         TmdbApiClient apiClient();
         Configuration configuration();

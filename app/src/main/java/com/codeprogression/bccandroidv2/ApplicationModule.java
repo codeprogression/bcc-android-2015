@@ -5,6 +5,8 @@ import android.content.Context;
 
 import com.codeprogression.bccandroidv2.api.TmdbApiClient;
 import com.codeprogression.bccandroidv2.api.models.Configuration;
+import com.google.gson.Gson;
+import com.squareup.okhttp.OkHttpClient;
 import com.squareup.picasso.Cache;
 import com.squareup.picasso.LruCache;
 import com.squareup.picasso.OkHttpDownloader;
@@ -17,7 +19,7 @@ import dagger.Module;
 import dagger.Provides;
 
 @Singleton
-@Module
+@Module(includes = DataModule.class)
 public class ApplicationModule {
 
     private Application application;
@@ -44,8 +46,8 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
-    TmdbApiClient apiClient() {
-        return new TmdbApiClient();
+    TmdbApiClient apiClient(OkHttpClient client, Gson gson) {
+        return new TmdbApiClient(client, gson);
     }
 
     @Provides
