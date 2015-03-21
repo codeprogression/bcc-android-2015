@@ -4,100 +4,95 @@ import com.codeprogression.bccandroidv2.BuildConfig;
 import com.codeprogression.bccandroidv2.api.models.Configuration;
 import com.codeprogression.bccandroidv2.api.models.Movie;
 import com.codeprogression.bccandroidv2.api.models.TmdbCollection;
-import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
 
-import java.io.BufferedInputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
+import java.io.IOException;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 public class TmdbApiClient {
+
+    private OkHttpClient client;
+    private Gson gson;
+
+    public TmdbApiClient(OkHttpClient client, Gson gson) {
+        this.client = client;
+        this.gson = gson;
+    }
 
     private Configuration configuration;
 
     public void getConfiguration(final Callback<Void> callback) {
 
-        if (configuration != null){
+        if (configuration != null) {
             callback.onComplete(null);
             return;
         }
 
-        new Thread(new Runnable() {
+        Request request = new Request.Builder()
+                .url("http://api.themoviedb.org/3/configuration?api_key=" + BuildConfig.TMDB_API_KEY)
+                .get()
+                .build();
+
+        client.newCall(request).enqueue(new com.squareup.okhttp.Callback() {
             @Override
-            public void run() {
-
-                try {
-                    URL url = new URL("http://api.themoviedb.org/3/configuration?api_key="
-                            + BuildConfig.TMDB_API_KEY);
-                    URLConnection connection = url.openConnection();
-                    BufferedInputStream inputStream = new BufferedInputStream(connection.getInputStream());
-                    Gson gson = new GsonBuilder()
-                            .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-                            .create();
-                    configuration =
-                            gson.fromJson(new InputStreamReader(inputStream), Configuration.class);
-                    callback.onComplete(null);
-
-                } catch (java.io.IOException e) {
-                    e.printStackTrace();
-                }
+            public void onFailure(Request request, IOException e) {
 
             }
-        }).start();
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+                if (!response.isSuccessful()) return;
+
+                configuration = gson.fromJson(response.body().charStream(), Configuration.class);
+                callback.onComplete(null);
+            }
+        });
     }
 
     public void getNowPlaying(final Callback<TmdbCollection<Movie>> callback) {
-        new Thread(new Runnable() {
+        Request request = new Request.Builder()
+                .url("http://api.themoviedb.org/3/movie/now_playing?api_key=" + BuildConfig.TMDB_API_KEY)
+                .get()
+                .build();
+        client.newCall(request).enqueue(new com.squareup.okhttp.Callback() {
             @Override
-            public void run() {
-                try {
-                    URL url = new URL("http://api.themoviedb.org/3/movie/now_playing?api_key="
-                            + BuildConfig.TMDB_API_KEY);
-                    URLConnection connection = url.openConnection();
-                    BufferedInputStream inputStream = new BufferedInputStream(connection.getInputStream());
-                    Gson gson = new GsonBuilder()
-                            .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-                            .create();
-                    final TmdbCollection<Movie> collection =
-                            gson.fromJson(new InputStreamReader(inputStream), Movie.Collection.class);
-                    callback.onComplete(collection);
+            public void onFailure(Request request, IOException e) {
 
-                } catch (java.io.IOException e) {
-                    e.printStackTrace();
-                }
             }
-        }).start();
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+                if (!response.isSuccessful()) return;
+                final TmdbCollection<Movie> collection =
+                        gson.fromJson(response.body().charStream(), Movie.Collection.class);
+                callback.onComplete(collection);
+            }
+        });
     }
 
     public void getMovie(final long id, final Callback<Movie> callback) {
-        new Thread(new Runnable() {
+        Request request = new Request.Builder()
+                .url("http://api.themoviedb.org/3/movie/" + Long.toString(id) + "?api_key=" + BuildConfig.TMDB_API_KEY)
+                .get()
+                .build();
+        client.newCall(request).enqueue(new com.squareup.okhttp.Callback() {
             @Override
-            public void run() {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
+            public void onFailure(Request request, IOException e) {
 
-                        try {
-                            URL url = new URL("http://api.themoviedb.org/3/movie/" + Long.toString(id) + "?api_key="
-                                    + BuildConfig.TMDB_API_KEY);
-                            URLConnection connection = url.openConnection();
-                            BufferedInputStream inputStream = new BufferedInputStream(connection.getInputStream());
-                            Gson gson = new GsonBuilder()
-                                    .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-                                    .create();
-                            Movie movie = gson.fromJson(new InputStreamReader(inputStream), Movie.class);
-                            callback.onComplete(movie);
-
-                        } catch (java.io.IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }).start();
             }
-        }).start();
 
+            @Override
+            public void onResponse(Response response) throws IOException {
+                if (!response.isSuccessful()) return;
+                Movie movie = gson.fromJson(response.body().charStream(), Movie.class);
+                callback.onComplete(movie);
+            }
+        });
     }
 
     public Configuration getConfiguration() {
