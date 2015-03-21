@@ -2,7 +2,7 @@ package com.codeprogression.bccandroidv2.ui;
 
 import com.codeprogression.bccandroidv2.R;
 import com.codeprogression.bccandroidv2.UnconventionalApplication;
-import com.codeprogression.bccandroidv2.api.TmdbApiClient;
+import com.codeprogression.bccandroidv2.api.TmdbApiService;
 import com.codeprogression.bccandroidv2.api.models.Configuration;
 import com.codeprogression.bccandroidv2.ui.main.MainActivity;
 
@@ -19,8 +19,8 @@ import rx.schedulers.Schedulers;
 
 public class LauncherActivity extends ActionBarActivity {
 
-    @Inject
-    TmdbApiClient client;
+    @Inject TmdbApiService client;
+    @Inject RuntimeConfiguration runtimeConfiguration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +29,7 @@ public class LauncherActivity extends ActionBarActivity {
         UnconventionalApplication.getComponent().inject(this);
 
 
-        client.fetchConfiguration()
+        client.getConfiguration()
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<Configuration>() {
@@ -45,7 +45,7 @@ public class LauncherActivity extends ActionBarActivity {
 
                     @Override
                     public void onNext(Configuration configuration) {
-                        client.setConfiguration(configuration);
+                        runtimeConfiguration.set(configuration);
                         final Intent intent = new Intent(getBaseContext(), MainActivity.class);
                         new Handler().postDelayed(new Runnable() {
                             @Override

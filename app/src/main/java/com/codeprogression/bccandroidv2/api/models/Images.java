@@ -2,10 +2,13 @@ package com.codeprogression.bccandroidv2.api.models;
 
 import com.google.gson.annotations.Expose;
 
+import org.parceler.Parcel;
+
 import java.util.List;
 
 import lombok.Getter;
 
+@Parcel
 public class Images {
 
     @Expose @Getter String baseUrl;
