@@ -12,16 +12,19 @@ import com.codeprogression.bccandroidv2.api.models.Movie;
 
 import javax.inject.Inject;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import timber.log.Timber;
 
 public class MainActivity extends ActionBarActivity {
 
     @Inject TmdbApiClient apiClient;
 
-    private NowPlayingView view;
+    @InjectView(R.id.now_playing_layout) NowPlayingView view;
     private MainActivityComponent component;
     private Subscription subscription;
 
@@ -42,7 +45,7 @@ public class MainActivity extends ActionBarActivity {
         inject();
 
         setContentView(R.layout.activity_main);
-        view = (NowPlayingView) findViewById(R.id.now_playing_layout);
+        ButterKnife.inject(this);
     }
 
     @Override
@@ -71,7 +74,7 @@ public class MainActivity extends ActionBarActivity {
 
                     @Override
                     public void onError(Throwable e) {
-
+                        Timber.e(e.getMessage(), e);
                     }
 
                     @Override

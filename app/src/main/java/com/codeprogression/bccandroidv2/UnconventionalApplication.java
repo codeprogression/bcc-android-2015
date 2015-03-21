@@ -14,6 +14,7 @@ import javax.inject.Provider;
 import javax.inject.Singleton;
 
 import dagger.Component;
+import timber.log.Timber;
 
 public class UnconventionalApplication extends Application {
 
@@ -47,6 +48,11 @@ public class UnconventionalApplication extends Application {
     public void onCreate() {
         super.onCreate();
         inject();
+        if (BuildConfig.DEBUG){
+            Timber.plant(new Timber.DebugTree());
+//        } else {
+            // Timber.plant(new CrashlyticsTree());
+        }
     }
 
 }

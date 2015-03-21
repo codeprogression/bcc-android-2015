@@ -11,10 +11,14 @@ import android.widget.RelativeLayout;
 import com.codeprogression.bccandroidv2.R;
 import com.codeprogression.bccandroidv2.api.models.Movie;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+
 public class NowPlayingView extends RelativeLayout {
 
-    private RecyclerView nowPlaying;
-    private ProgressBar progress;
+    @InjectView(R.id.now_playing) RecyclerView nowPlaying;
+    @InjectView(R.id.progress) ProgressBar progress;
+
     private NowPlayingAdapter adapter;
 
     public NowPlayingView(Context context, AttributeSet attrs) {
@@ -24,16 +28,14 @@ public class NowPlayingView extends RelativeLayout {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-
-        nowPlaying = (RecyclerView) findViewById(R.id.now_playing);
-        progress = (ProgressBar) findViewById(R.id.progress);
-
+        ButterKnife.inject(this);
         nowPlaying.setLayoutManager(new GridLayoutManager(getContext(), 2));
     }
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
+        ButterKnife.reset(this);
     }
 
     public void bind(Movie.Collection collection){

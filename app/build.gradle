@@ -24,6 +24,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    packagingOptions {
+        exclude 'META-INF/services/javax.annotation.processing.Processor'
+    }
 }
 
 dependencies {
@@ -41,4 +44,25 @@ dependencies {
 
     compile 'io.reactivex:rxjava:1.0.16' // https://github.com/ReactiveX/RxJava
     compile 'io.reactivex:rxandroid:1.0.1' // https://github.com/ReactiveX/RxAndroid
+
+
+    // http://jakewharton.github.io/butterknife/
+    compile 'com.jakewharton:butterknife:6.0.0'
+
+    // https://github.com/JakeWharton/timber
+    compile 'com.jakewharton.timber:timber:2.5.0'
+
+    // https://github.com/f2prateek/dart
+    compile 'com.f2prateek.dart:dart:1.1.0'
+
+    provided 'org.projectlombok:lombok:1.16.4'
+    apt 'org.projectlombok:lombok:1.16.4'
+
+    compile 'com.hannesdorfmann.parcelableplease:annotation:1.0.1'
+    apt 'com.hannesdorfmann.parcelableplease:processor:1.0.1'
+
+    compile 'com.squareup.retrofit:retrofit:1.9.0'
+
+    compile 'net.danlew:android.joda:2.8.2'
+
 }
