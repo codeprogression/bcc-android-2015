@@ -1,16 +1,11 @@
-package com.codeprogression.bccandroidv2;
+package com.codeprogression.bccandroidv2.ui;
 
-import com.codeprogression.bccandroidv2.util.SystemUiHider;
+import com.codeprogression.bccandroidv2.R;
 
-import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
-import android.view.MotionEvent;
-import android.view.View;
 
 public class LauncherActivity extends ActionBarActivity {
 

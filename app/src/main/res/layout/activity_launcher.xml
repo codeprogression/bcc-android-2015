@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ffd82337"
-    tools:context="com.codeprogression.bccandroidv2.LauncherActivity">
+    tools:context="com.codeprogression.bccandroidv2.ui.LauncherActivity">
 
     <!-- This FrameLayout insets its children based on system windows using
          android:fitsSystemWindows. -->

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.codeprogression.bccandroidv2.ui.views.MovieDetailView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/detail_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -13,12 +14,12 @@
         android:id="@+id/poster"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentRight="true"/>
+        android:layout_alignParentRight="true" />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#80000000" >
+        android:background="#80000000">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -31,18 +32,17 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="48dp"
                 android:padding="16dp"
-                android:textSize="24sp"
-                android:textColor="?android:attr/textColorSecondary"/>
+                android:textColor="?android:attr/textColorSecondary"
+                android:textSize="24sp" />
 
             <TextView
                 android:id="@+id/overview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="16dp"
-                android:textSize="16sp"
                 android:textColor="?android:attr/textColorPrimary"
-                />
+                android:textSize="16sp" />
         </LinearLayout>
 
     </ScrollView>
-</RelativeLayout>
+</com.codeprogression.bccandroidv2.ui.views.MovieDetailView>
