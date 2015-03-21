@@ -1,4 +1,4 @@
-package com.codeprogression.bccandroidv2.ui.views;
+package com.codeprogression.bccandroidv2.ui.movie;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -9,13 +9,16 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.codeprogression.bccandroidv2.R;
-import com.codeprogression.bccandroidv2.UnconventionalApplication;
+import com.codeprogression.bccandroidv2.api.models.Configuration;
 import com.codeprogression.bccandroidv2.api.models.Movie;
 import com.squareup.picasso.Picasso;
 
+import javax.inject.Inject;
+
 public class MovieDetailView extends RelativeLayout {
 
-    private Picasso picasso = UnconventionalApplication.picasso;
+    @Inject Picasso picasso;
+    @Inject Configuration configuration;
 
     private ProgressBar progress;
     private ImageView poster;
@@ -24,6 +27,7 @@ public class MovieDetailView extends RelativeLayout {
 
     public MovieDetailView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        ((MovieActivity)context).getComponent().inject(this);
     }
 
     @Override
@@ -39,13 +43,14 @@ public class MovieDetailView extends RelativeLayout {
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
+        picasso.cancelRequest(poster);
     }
 
     public void bind(Movie movie){
         progress.setVisibility(View.GONE);
         title.setText(movie.getTitle());
         overview.setText(movie.getOverview());
-        String posterUri = movie.getPosterUri(UnconventionalApplication.configuration);
+        String posterUri = movie.getPosterUri(configuration);
         picasso.load(posterUri).into(poster);
     }
 }

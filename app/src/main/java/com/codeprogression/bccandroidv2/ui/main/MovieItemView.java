@@ -1,4 +1,4 @@
-package com.codeprogression.bccandroidv2.ui.views;
+package com.codeprogression.bccandroidv2.ui.main;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -7,14 +7,16 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.codeprogression.bccandroidv2.R;
-import com.codeprogression.bccandroidv2.UnconventionalApplication;
 import com.codeprogression.bccandroidv2.api.models.Configuration;
 import com.codeprogression.bccandroidv2.api.models.Movie;
+import com.codeprogression.bccandroidv2.ui.main.MainActivity;
 import com.squareup.picasso.Picasso;
 
+import javax.inject.Inject;
+
 public class MovieItemView extends RelativeLayout {
-    private Picasso picasso = UnconventionalApplication.picasso;
-    private Configuration configuration = UnconventionalApplication.configuration;
+    @Inject Picasso picasso;
+    @Inject Configuration configuration;
 
     private TextView title;
     private ImageView poster;
@@ -22,6 +24,7 @@ public class MovieItemView extends RelativeLayout {
 
     public MovieItemView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        ((MainActivity)context).getComponent().inject(this);
     }
 
     @Override
@@ -36,6 +39,7 @@ public class MovieItemView extends RelativeLayout {
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
+        picasso.cancelRequest(poster);
     }
 
     public void bind(Movie movie){
@@ -43,6 +47,5 @@ public class MovieItemView extends RelativeLayout {
         if (title == null) return;
         title.setText(movie.getTitle());
         picasso.load(movie.getBackdropUri(configuration)).placeholder(R.drawable.ic_logo_tmdb_v8).into(poster);
-        picasso.load(movie.getPosterUri(configuration)).fetch();
     }
 }

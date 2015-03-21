@@ -1,7 +1,6 @@
 package com.codeprogression.bccandroidv2.api;
 
 import com.codeprogression.bccandroidv2.BuildConfig;
-import com.codeprogression.bccandroidv2.UnconventionalApplication;
 import com.codeprogression.bccandroidv2.api.models.Configuration;
 import com.codeprogression.bccandroidv2.api.models.Movie;
 import com.codeprogression.bccandroidv2.api.models.TmdbCollection;
@@ -16,9 +15,11 @@ import java.net.URLConnection;
 
 public class TmdbApiClient {
 
+    private Configuration configuration;
+
     public void getConfiguration(final Callback<Void> callback) {
 
-        if (UnconventionalApplication.configuration != null){
+        if (configuration != null){
             callback.onComplete(null);
             return;
         }
@@ -35,7 +36,7 @@ public class TmdbApiClient {
                     Gson gson = new GsonBuilder()
                             .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                             .create();
-                    UnconventionalApplication.configuration =
+                    configuration =
                             gson.fromJson(new InputStreamReader(inputStream), Configuration.class);
                     callback.onComplete(null);
 
@@ -97,6 +98,10 @@ public class TmdbApiClient {
             }
         }).start();
 
+    }
+
+    public Configuration getConfiguration() {
+        return configuration;
     }
 
     public interface Callback<T> {
