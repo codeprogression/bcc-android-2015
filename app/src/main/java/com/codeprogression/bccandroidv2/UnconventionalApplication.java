@@ -35,7 +35,7 @@ public class UnconventionalApplication extends Application {
     }
 
     public void inject(){
-        component = Dagger_UnconventionalApplication_ApplicationComponent.builder()
+        component = DaggerUnconventionalApplication_ApplicationComponent.builder()
                 .applicationModule(new ApplicationModule(this))
                 .build();
     }

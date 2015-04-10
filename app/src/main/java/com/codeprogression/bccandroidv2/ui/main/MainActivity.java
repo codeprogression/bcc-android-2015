@@ -33,7 +33,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void inject() {
-        component = Dagger_MainActivityComponent.builder()
+        component = DaggerMainActivityComponent.builder()
                 .applicationComponent(UnconventionalApplication.getComponent())
                 .build();
         component.inject(this);
