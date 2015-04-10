@@ -33,7 +33,7 @@ public class MovieActivity extends ActionBarActivity {
     }
 
     private void inject() {
-        component = Dagger_MovieActivityComponent.builder()
+        component = DaggerMovieActivityComponent.builder()
                 .applicationComponent(UnconventionalApplication.getComponent())
                 .build();
         component.inject(this);
