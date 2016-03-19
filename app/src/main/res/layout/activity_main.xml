@@ -1,18 +1,20 @@
-<com.codeprogression.bccandroidv2.ui.main.NowPlayingView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<com.codeprogression.bccandroidv3.ui.main.MoviesView
     android:id="@+id/now_playing_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.codeprogression.bccandroidv2.ui.main.MainActivity">
+    tools:context="com.codeprogression.bccandroidv3.ui.main.MainActivity">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
     <ProgressBar
         android:id="@+id/progress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true" />
+        android:layout_centerInParent="true"/>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/now_playing"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-</com.codeprogression.bccandroidv2.ui.main.NowPlayingView>
+</com.codeprogression.bccandroidv3.ui.main.MoviesView>

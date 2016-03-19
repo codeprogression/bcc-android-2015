@@ -2,17 +2,21 @@ apply from: "tmdb.gradle"
 apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
 
+dependencies {
+    testCompile 'junit:junit:4.12'
+}
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
 
-    dataBinding{
+    dataBinding {
         enabled = true
     }
+
     defaultConfig {
         applicationId "com.codeprogression.bccandroidv2"
         minSdkVersion 16
-        targetSdkVersion 22
+        targetSdkVersion 23
         versionCode 1
         versionName "1.0"
 
@@ -28,37 +32,58 @@ android {
     packagingOptions {
         exclude 'META-INF/services/javax.annotation.processing.Processor'
     }
-}
 
-dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:23.1.0'
-    compile 'com.android.support:recyclerview-v7:23.1.0'
-    compile 'com.android.support:support-v4:23.1.0'
-    compile 'com.google.code.gson:gson:2.4'
-    compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.squareup.okhttp:okhttp:2.5.0'
+    dependencies {
+        compile fileTree(dir: 'libs', include: ['*.jar'])
 
-    provided 'org.glassfish:javax.annotation:10.0-b28' // adds the @Generated annotation that Android lacks.
-    compile'com.google.dagger:dagger:2.0.1' // https://google.github.io/dagger.
-    apt ('com.google.dagger:dagger-compiler:2.0.1')
+        /* ANDROID */
+        compile 'com.android.support:appcompat-v7:23.2.1'
+        compile 'com.android.support:recyclerview-v7:23.2.1'
+        compile 'com.android.support:support-v4:23.2.1'
 
-    // http://jakewharton.github.io/butterknife/
-    compile 'com.jakewharton:butterknife:6.0.0'
 
-    // https://github.com/JakeWharton/timber
-    compile 'com.jakewharton.timber:timber:2.5.0'
+        /* UI */
+        compile 'com.squareup.picasso:picasso:2.6.0-SNAPSHOT'
+        compile 'com.jakewharton:butterknife:7.0.1'
 
-    // https://github.com/f2prateek/dart
-    compile 'com.f2prateek.dart:dart:1.1.0'
 
-    provided 'org.projectlombok:lombok:1.16.4'
-    apt 'org.projectlombok:lombok:1.16.4'
+        /* CODE GENERATION */
+        // adds the @Generated annotation that Android lacks.
+        provided 'org.glassfish:javax.annotation:10.0-b28'
+        provided 'org.projectlombok:lombok:1.16.4'
+        apt 'org.projectlombok:lombok:1.16.4'
 
-    compile 'com.hannesdorfmann.parcelableplease:annotation:1.0.1'
-    apt 'com.hannesdorfmann.parcelableplease:processor:1.0.1'
 
-    compile 'com.squareup.retrofit:retrofit:1.9.0'
+        /* DEPENDENCY INJECTION */
+        compile 'com.google.dagger:dagger:2.1'
+        apt('com.google.dagger:dagger-compiler:2.1')
 
-    compile 'net.danlew:android.joda:2.8.2'
+
+        /* NETWORKING */
+        compile 'com.google.code.gson:gson:2.6.2'
+        compile 'com.squareup.okhttp3:okhttp:3.2.0'
+        compile 'com.squareup.okhttp3:logging-interceptor:3.2.0'
+        compile 'com.squareup.retrofit2:retrofit:2.0.0'
+        compile 'com.squareup.retrofit2:converter-gson:2.0.0'
+        compile 'com.squareup.retrofit2:adapter-rxjava:2.0.0'
+
+
+        /* RX */
+        compile 'io.reactivex:rxjava:1.1.1'
+        compile 'io.reactivex:rxjava-debug:1.0.3'
+        compile 'io.reactivex:rxandroid:1.1.0'
+
+
+        /* UTILITY */
+        compile 'com.jakewharton.timber:timber:4.1.1'
+        compile 'net.danlew:android.joda:2.9.2'
+
+
+        /* UNIT TEST */
+        testCompile 'com.android.support:support-annotations:23.2.1'
+        testCompile 'junit:junit:4.12'
+        testCompile 'org.mockito:mockito-core:1.10.19'
+        testCompile 'com.squareup.assertj:assertj-android:1.0.1'
+    }
+
 }

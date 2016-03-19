@@ -1,48 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.codeprogression.bccandroidv2.ui.movie.MovieDetailView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/detail_view"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <ProgressBar
-        android:id="@+id/progress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true" />
+    <data>
 
-    <ImageView
-        android:id="@+id/poster"
+        <import type="android.view.View"/>
+
+        <variable
+            name="viewModel"
+            type="com.codeprogression.bccandroidv3.ui.movie.MovieDetailView.ViewModel"/>
+    </data>
+
+    <com.codeprogression.bccandroidv3.ui.movie.MovieDetailView
+        android:id="@+id/detail_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentRight="true" />
+        android:layout_height="match_parent">
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#80000000">
 
-        <LinearLayout
+        <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            android:layout_alignParentRight="true"
+            app:imageUrl="@{viewModel.imageUrl}"/>
 
-            <TextView
-                android:id="@+id/title"
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#80000000">
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="48dp"
-                android:padding="16dp"
-                android:textColor="?android:attr/textColorSecondary"
-                android:textSize="24sp" />
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/overview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="16dp"
-                android:textColor="?android:attr/textColorPrimary"
-                android:textSize="16sp" />
-        </LinearLayout>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="48dp"
+                    android:padding="16dp"
+                    android:textColor="?android:attr/textColorSecondary"
+                    android:textSize="24sp"
+                    android:text="@{viewModel.title}"/>
 
-    </ScrollView>
-</com.codeprogression.bccandroidv2.ui.movie.MovieDetailView>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:textSize="16sp"
+                    android:text="@{viewModel.overview}"/>
+            </LinearLayout>
+
+        </ScrollView>
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="@{viewModel.isLoading ? View.VISIBLE : View.GONE}"/>
+    </com.codeprogression.bccandroidv3.ui.movie.MovieDetailView>
+</layout>
